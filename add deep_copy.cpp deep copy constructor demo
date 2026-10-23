@@ -1,0 +1,78 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+class Student
+{
+private:
+    string name;
+    string id;
+    int *scores;
+    int numScores;
+public:
+    Student(string n, string i, int num, int scoreArr[])
+    {
+        name = n;
+        id = i;
+        numScores = num;
+        scores = new int[numScores];
+        for(int j = 0; j < numScores; j++)
+        {
+            scores[j] = scoreArr[j];
+        }
+    }
+    // 修正这里，去掉 .
+    Student(const Student &other)
+    {
+        name = other.name;
+        id = other.id;
+        numScores = other.numScores;
+        scores = new int[numScores];
+        for(int j=0;j<numScores;j++)
+        {
+            scores[j] = other.scores[j];
+        }
+        cout << "Copy Constructor(deep copy)called" << endl;
+    }
+    ~Student()
+    {
+        delete[] scores;
+        scores = nullptr;
+    }
+    void pprint()
+    {
+        cout << name << " " << id << " ";
+        for(int j = 0; j < numScores;j++)
+        {
+            cout << scores[j] << " ";
+        }
+        cout << endl;
+    }
+    void setScore(int index,int val)
+    {
+        if(index>=0 && index < numScores)
+        {
+            scores[index] = val;
+        }
+    }
+};
+
+int main()
+{
+    int arr[3]={85,90,78};
+    Student stu1("ZhangSan","2025001",3,arr);
+    Student stu2 = stu1; //触发深拷贝构造
+    cout << "stu1: ";
+    stu1.pprint();
+    cout << "stu2: ";
+    stu2.pprint();
+
+    // 修改stu2分数，stu1不会变，验证深拷贝
+    stu2.setScore(0,100);
+    cout << "\nAfter modify stu2 score:"<<endl;
+    cout << "stu1: ";
+    stu1.pprint();
+    cout << "stu2: ";
+    stu2.pprint();
+    return 0;
+}
